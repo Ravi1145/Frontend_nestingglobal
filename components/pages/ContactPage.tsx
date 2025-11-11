@@ -46,7 +46,7 @@ const ContactPage: React.FC = () => {
                                 </div>
                                 <div>
                                     <label htmlFor="phone" className="text-sm font-sans font-semibold text-charcoal block mb-2">Phone Number</label>
-                                    <input type="tel" id="phone" placeholder="+91 98380 03440" required className="w-full px-4 py-3 text-sm border border-beige-border rounded-md focus:outline-none focus:ring-2 focus:ring-champagne-gold" />
+                                    <input type="tel" id="phone" placeholder="+971 563138227" required className="w-full px-4 py-3 text-sm border border-beige-border rounded-md focus:outline-none focus:ring-2 focus:ring-champagne-gold" />
                                 </div>
                                 <div>
                                     <label htmlFor="message" className="text-sm font-sans font-semibold text-charcoal block mb-2">Message</label>
@@ -92,8 +92,8 @@ const ContactPage: React.FC = () => {
                             <div className="bg-white p-8 rounded-lg shadow-elegant">
                                 <h3 className="text-xl font-sans font-semibold text-charcoal mb-4">Contact Details</h3>
                                 <div className="text-warm-gray space-y-2">
-                                    <p>📞 <a href="tel:+919838003440" className="hover:text-gold transition-colors">+91 98380 03440</a></p>
-                                    <p>📧 <a href="mailto:inquire@nestingglobal.com" className="hover:text-gold transition-colors">inquire@nestingglobal.com</a></p>
+                                    <p>📞 <a href="tel:+971563138227" className="hover:text-gold transition-colors">+971 563138227</a></p>
+                                    <p>📧 <a href="mailto:Support@nestingglobal.com" className="hover:text-gold transition-colors">Support@nestingglobal.com</a></p>
                                 </div>
                             </div>
                         </div>

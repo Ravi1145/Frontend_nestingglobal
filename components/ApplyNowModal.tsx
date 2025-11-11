@@ -85,7 +85,7 @@ const ApplyNowModal: React.FC<ApplyNowModalProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <label htmlFor="modal-phone" className="text-sm font-sans font-semibold text-charcoal block mb-2">Phone Number</label>
-                <input type="tel" id="modal-phone" placeholder="+91 98380 03440" required className="w-full px-4 py-3 text-sm border border-beige-border rounded-md focus:outline-none focus:ring-2 focus:ring-champagne-gold" />
+                <input type="tel" id="modal-phone" placeholder="+971 563138227" required className="w-full px-4 py-3 text-sm border border-beige-border rounded-md focus:outline-none focus:ring-2 focus:ring-champagne-gold" />
               </div>
               <div>
                 <button

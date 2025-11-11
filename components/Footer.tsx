@@ -35,8 +35,8 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="font-sans font-semibold tracking-wider uppercase text-charcoal mb-4">Contact Us</h4>
             <address className="not-italic text-sm text-warm-gray space-y-3">
               <p>One Palm, Palm Jumeirah, Dubai, UAE</p>
-              <p><a href="tel:+919838003440" className="hover:text-gold transition-colors">+91 98380 03440</a></p>
-              <p><a href="mailto:inquire@nestingglobal.com" className="hover:text-gold transition-colors">inquire@nestingglobal.com</a></p>
+              <p><a href="tel:+971563138227" className="hover:text-gold transition-colors">+971 563138227</a></p>
+              <p><a href="mailto:Support@nestingglobal.com" className="hover:text-gold transition-colors">Support@nestingglobal.com</a></p>
             </address>
           </div>
 

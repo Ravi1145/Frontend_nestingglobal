@@ -37,7 +37,7 @@ const AboutPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <AnimatedSection>
             <div className="h-96 md:h-[600px] rounded-lg overflow-hidden shadow-elegant">
-              <img src="https://picsum.photos/seed/team-photo/800/1000" alt="Nesting Global Team Meeting" className="w-full h-full object-cover" />
+              <img src="/pawanpreet-singh-gAGEEvptFSc-unsplash.jpg" alt="Atlantis The Palm Dubai" className="w-full h-full object-cover" />
             </div>
           </AnimatedSection>
           <AnimatedSection>

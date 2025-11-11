@@ -60,7 +60,7 @@ const HomePage: React.FC<HomePageProps> = ({ onViewDetails }) => {
   return (
     <div className="space-y-24 md:space-y-32 pb-24">
       {/* Hero Section */}
-      <section className="relative h-screen min-h-[700px] flex items-center justify-center text-white text-center bg-cover bg-fixed bg-center" style={{ backgroundImage: "url('https://picsum.photos/seed/dubai-skyline/1920/1080')" }}>
+      <section className="relative h-screen min-h-[700px] flex items-center justify-center text-white text-center bg-cover bg-fixed bg-center" style={{ backgroundImage: "url('/pawanpreet-singh-gAGEEvptFSc-unsplash.jpg')" }}>
         <div className="absolute inset-0 bg-charcoal opacity-50"></div>
         <div className="relative z-10 p-6">
           <h1 className="font-serif text-5xl md:text-7xl font-semibold tracking-tight animate-[fadeInUp_1s_ease-out]">
@@ -107,7 +107,7 @@ const HomePage: React.FC<HomePageProps> = ({ onViewDetails }) => {
           </div>
         </div>
         <div className="h-96 lg:h-[500px] rounded-lg overflow-hidden shadow-elegant">
-          <img src="https://picsum.photos/seed/dubai-marina/800/600" alt="Dubai Marina" className="w-full h-full object-cover" />
+          <img src="/david-rodrigo-Fr6zexbmjmc-unsplash.jpg" alt="Dubai Downtown Skyline" className="w-full h-full object-cover" />
         </div>
       </section>
       
