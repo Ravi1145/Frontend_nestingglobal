@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Property, PropertyType } from '../../types';
 import PropertyCard from '../PropertyCard';
@@ -11,7 +10,7 @@ interface PropertiesPageProps {
   onToggleFavorite: (propertyId: string) => void;
 }
 
-const PropertiesPage: React.FC<PropertiesPageProps> = ({ properties, onViewDetails, favorites, onToggleFavorite }) => {
+const PropertiesPage: React.FC<PropertiesPageProps> = ({ properties=[], onViewDetails, favorites, onToggleFavorite }) => {
   const [filters, setFilters] = useState({
     location: 'All',
     type: 'All',
