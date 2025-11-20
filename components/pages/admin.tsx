@@ -2,11 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import './App.css'; 
 
-const BACKEND_URL="https://backend-nestinggloabl.onrender.com"
+const API_BASE_URL = 'https://backend-nestingglobal.onrender.com';
+const SOCKET_SERVER_URL = 'https://backend-nestingglobal.onrender.com';
+
 
 const useSocket = (eventName, handler) => {
     useEffect(() => {
-        const socket = io(BACKEND_URL, { transports: ['websocket'] });
+        const socket = io(API_BASE_URL, { transports: ['websocket'] });
         socket.on(eventName, handler);
 
         return () => {
@@ -39,10 +41,9 @@ function App() {
         images: [],
     });
 
-    // ---------------- FETCH CONTACTS -------------------
     const fetchContacts = useCallback(async () => {
         try {
-            const response = await fetch(`${BACKEND_URL}/api/contact`);
+            const response = await fetch(`${API_BASE_URL}/api/contact`);
             const data = await response.json();
             setContacts(data.data || []);
         } catch (err) {
@@ -50,16 +51,16 @@ function App() {
         }
     }, []);
 
-    // SOCKET — NEW CONTACT
+
     const handleNewContact = useCallback((newContact) => {
         setContacts(prev => [newContact, ...prev]);
     }, []);
     useSocket("newContact", handleNewContact);
 
-    // ---------------- FETCH PROPERTIES -------------------
+
     const fetchProperties = useCallback(async () => {
         try {
-            const response = await fetch(`${BACKEND_URL}/api/properties`);
+            const response = await fetch(`${API_BASE_URL}/api/properties`);
             const data = await response.json();
 
             setProperties(data.properties || []);
@@ -72,7 +73,7 @@ function App() {
         }
     }, []);
 
-    ////////////////////////////
+    
     useEffect(() => {
         Promise.all([fetchProperties(), fetchContacts()]).finally(() => setLoading(false));
     }, [fetchProperties, fetchContacts]);
@@ -124,7 +125,7 @@ function App() {
         formData.images.forEach(file => data.append("images", file));
 
         try {
-            const response = await fetch(`${BACKEND_URL}/api/properties`, {
+            const response = await fetch(`${API_BASE_URL}/api/properties`, {
                 method: "POST",
                 body: data
             });
@@ -146,11 +147,11 @@ function App() {
 
     // ---------------- DOWNLOADS -------------------
     const handleDownloadProperties = () => {
-        window.open(`${BACKEND_URL}/api/download-excel`, "_blank");
+        window.open(`${API_BASE_URL}/api/download-excel`, "_blank");
     };
 
     const handleDownloadContacts = () => {
-        window.open(`${BACKEND_URL}/api/download-contact-excel`, "_blank");
+        window.open(`${API_BASE_URL}/api/download-contact-excel`, "_blank");
     };
 
     // ---------------- RENDER SIDEBAR -------------------

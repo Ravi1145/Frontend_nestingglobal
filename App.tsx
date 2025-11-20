@@ -11,8 +11,7 @@ import AboutPage from './components/pages/AboutPage';
 import ContactPage from './components/pages/ContactPage';
 import ApplyNowModal from './components/ApplyNowModal';
 
-const BACKEND_URL =
-  import.meta.env.VITE_API_BASE_URL ||
+const API_BASE_URL =
   "https://backend-nestinggloabl.onrender.com";
 
 const App: React.FC = () => {
@@ -39,31 +38,55 @@ const App: React.FC = () => {
     coordinates: p.coordinates,
   });
 
-  // Fetch properties
   useEffect(() => {
-    fetch(`${BACKEND_URL}/api/properties`)
+    try {
+      const cached = localStorage.getItem('propertiesCache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed)) setAllProperties(parsed.map(transformProperty));
+      }
+    } catch {}
+
+    fetch(`${API_BASE_URL}/api/properties`)
       .then(res => res.json())
       .then(data => {
-        if (data && data.properties) {
-          setAllProperties(data.properties.map(transformProperty));
-        }
+        const items = Array.isArray(data) ? data : (data.properties || []);
+        const mapped = items.map(transformProperty);
+        setAllProperties(mapped);
+        try { localStorage.setItem('propertiesCache', JSON.stringify(mapped)); } catch {}
       })
-      .catch(err => console.error("Fetch error:", err));
+      .catch(() => {});
   }, []);
+
 
   // Live updates
   useSocket("propertyAdded", (newProperty) => {
-    setAllProperties(prev => [transformProperty(newProperty), ...prev]);
+    setAllProperties(prev => {
+      const updated = [transformProperty(newProperty), ...prev];
+      try { localStorage.setItem('propertiesCache', JSON.stringify(updated)); } catch {}
+      return updated;
+    });
   });
 
   useSocket("propertyUpdated", (updatedProperty) => {
-    setAllProperties(prev =>
-      prev.map(p =>
+    setAllProperties(prev => {
+      const updated = prev.map(p =>
         p.id === (updatedProperty._id || updatedProperty.id)
           ? transformProperty(updatedProperty)
           : p
-      )
-    );
+      );
+      try { localStorage.setItem('propertiesCache', JSON.stringify(updated)); } catch {}
+      return updated;
+    });
+  });
+
+  useSocket("propertyDeleted", (deletedProperty) => {
+    const deletedId = deletedProperty._id || deletedProperty.id;
+    setAllProperties(prev => {
+      const updated = prev.filter(p => p.id !== deletedId);
+      try { localStorage.setItem('propertiesCache', JSON.stringify(updated)); } catch {}
+      return updated;
+    });
   });
 
   const toggleFavorite = useCallback((propertyId: string) => {

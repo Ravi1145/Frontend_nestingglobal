@@ -1,13 +1,15 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Property, Testimonial, PropertyType } from '../../types';
-import { PROPERTIES, TESTIMONIALS } from '../../constants';
+import { TESTIMONIALS } from '../../constants';
 import PropertyCard from '../PropertyCard';
 import { useOnScreen } from '../../hooks/useOnScreen';
 import { ChevronDownIcon, StarIcon, ArrowRightIcon } from '../icons';
 
+
 interface HomePageProps {
   onViewDetails: (property: Property) => void;
+  properties: Property[];
 }
 
 const AnimatedCounter: React.FC<{ value: number }> = ({ value }) => {
@@ -15,6 +17,7 @@ const AnimatedCounter: React.FC<{ value: number }> = ({ value }) => {
   const ref = useRef<HTMLSpanElement | null>(null);
   const isVisible = useOnScreen(ref);
 
+  
   useEffect(() => {
     if (isVisible) {
       let start = 0;
@@ -37,7 +40,7 @@ const AnimatedCounter: React.FC<{ value: number }> = ({ value }) => {
   return <span ref={ref}>{count.toLocaleString()}</span>;
 };
 
-const HomePage: React.FC<HomePageProps> = ({ onViewDetails }) => {
+const HomePage: React.FC<HomePageProps> = ({ onViewDetails, properties }) => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   
   useEffect(() => {
@@ -47,7 +50,9 @@ const HomePage: React.FC<HomePageProps> = ({ onViewDetails }) => {
     return () => clearInterval(timer);
   }, []);
 
-  const featuredProperties = PROPERTIES.filter(p => p.status === 'Featured').slice(0, 3);
+  const featuredProperties = useMemo(() => {
+    return properties.filter(p => p.status === 'Featured').slice(0, 3);
+  }, [properties]);
   
   const categories: { name: PropertyType; icon: string }[] = [
     { name: 'Apartment', icon: '🏢' },
@@ -56,6 +61,7 @@ const HomePage: React.FC<HomePageProps> = ({ onViewDetails }) => {
     { name: 'Commercial', icon: '💼' },
     { name: 'Off-Plan', icon: '🏗️' }
   ];
+
 
   return (
     <div className="space-y-24 md:space-y-32 pb-24">
@@ -79,7 +85,16 @@ const HomePage: React.FC<HomePageProps> = ({ onViewDetails }) => {
         <p className="text-center text-warm-gray mt-4 max-w-xl mx-auto">A curated selection of our finest listings, showcasing the pinnacle of luxury and design.</p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {featuredProperties.map(prop => (
-            <PropertyCard key={prop.id} property={prop} onViewDetails={onViewDetails} isFavorite={false} onToggleFavorite={()=>{}} />
+            <PropertyCard
+              key={prop.id}
+              property={prop}
+              onViewDetails={(id) => {
+                const p = featuredProperties.find(fp => fp.id === id);
+                if (p) onViewDetails(p);
+              }}
+              isFavorite={false}
+              onToggleFavorite={() => {}}
+            />
           ))}
         </div>
       </section>
