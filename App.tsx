@@ -38,56 +38,35 @@ const App: React.FC = () => {
     coordinates: p.coordinates,
   });
 
+  // Fetch properties
   useEffect(() => {
-    try {
-      const cached = localStorage.getItem('propertiesCache');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed)) setAllProperties(parsed.map(transformProperty));
-      }
-    } catch {}
-
     fetch(`${API_BASE_URL}/api/properties`)
       .then(res => res.json())
       .then(data => {
-        const items = Array.isArray(data) ? data : (data.properties || []);
-        const mapped = items.map(transformProperty);
-        setAllProperties(mapped);
-        try { localStorage.setItem('propertiesCache', JSON.stringify(mapped)); } catch {}
+        if (data && data.properties) {
+          setAllProperties(data.properties.map(transformProperty));
+        }
       })
-      .catch(() => {});
+      .catch(err => console.error("Fetch error:", err));
   }, []);
 
 
   // Live updates
   useSocket("propertyAdded", (newProperty) => {
-    setAllProperties(prev => {
-      const updated = [transformProperty(newProperty), ...prev];
-      try { localStorage.setItem('propertiesCache', JSON.stringify(updated)); } catch {}
-      return updated;
-    });
+    setAllProperties(prev => [transformProperty(newProperty), ...prev]);
   });
 
   useSocket("propertyUpdated", (updatedProperty) => {
-    setAllProperties(prev => {
-      const updated = prev.map(p =>
+    setAllProperties(prev =>
+      prev.map(p =>
         p.id === (updatedProperty._id || updatedProperty.id)
           ? transformProperty(updatedProperty)
           : p
-      );
-      try { localStorage.setItem('propertiesCache', JSON.stringify(updated)); } catch {}
-      return updated;
-    });
+      )
+    );
   });
 
-  useSocket("propertyDeleted", (deletedProperty) => {
-    const deletedId = deletedProperty._id || deletedProperty.id;
-    setAllProperties(prev => {
-      const updated = prev.filter(p => p.id !== deletedId);
-      try { localStorage.setItem('propertiesCache', JSON.stringify(updated)); } catch {}
-      return updated;
-    });
-  });
+  
 
   const toggleFavorite = useCallback((propertyId: string) => {
     setFavorites(prev =>
@@ -125,7 +104,6 @@ const App: React.FC = () => {
           return (
             <PropertyDetailPage
               property={selectedProperty}
-              properties={allProperties}
               onNavigateBack={() => navigateTo(Page.Properties)}
               favorites={favorites}
               onToggleFavorite={toggleFavorite}
