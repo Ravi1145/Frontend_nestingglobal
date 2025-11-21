@@ -35,7 +35,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     >
       <div className="relative overflow-hidden">
         <img
-          src={property.images?.[0] || '/placeholder.jpg'}
+          src={(property.images?.[0]
+            ? (property.images[0].startsWith('http') || property.images[0].startsWith('/')
+                ? property.images[0]
+                : (((import.meta as any).env.VITE_API_BASE_URL || '') + '/' + property.images[0]))
+            : '/property image/download.jpg')}
           alt={property.title}
           className="w-full h-64 object-cover transition-transform duration-500 ease-out-expo group-hover:scale-110"
         />

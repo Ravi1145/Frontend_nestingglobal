@@ -103,7 +103,8 @@ function App() {
         const { name, value, type, files } = e.target;
 
         if (type === "file") {
-            setFormData(prev => ({ ...prev, images: Array.from(files) }));
+            const selectedFiles = Array.from(files).slice(0, 5); // max 5 images
+        setFormData(prev => ({ ...prev, images: selectedFiles }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
@@ -279,7 +280,7 @@ function App() {
                 </div>
 
                 <label>Images*</label>
-                <input type="file" name="images" multiple accept="image/*" onChange={handleFormChange} required />
+                <input type="file" name="images" multiple accept="image/*" onChange={handleFormChange} required max = {5}/>
 
                 <button type="submit" disabled={formStatus === "submitting"}>
                     {formStatus === "submitting" ? "Saving..." : "Add Property"}

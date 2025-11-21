@@ -131,7 +131,16 @@ const PropertiesPage: React.FC<PropertiesPageProps> = ({ properties=[], onViewDe
             {filteredAndSortedProperties.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {filteredAndSortedProperties.map(prop => (
-                    <PropertyCard key={prop.id} property={prop} onViewDetails={onViewDetails} isFavorite={favorites.includes(prop.id)} onToggleFavorite={onToggleFavorite}/>
+                    <PropertyCard
+                      key={prop.id}
+                      property={prop}
+                      onViewDetails={(id) => {
+                        const p = properties.find(x => x.id === id);
+                        if (p) onViewDetails(p);
+                      }}
+                      isFavorite={favorites.includes(prop.id)}
+                      onToggleFavorite={onToggleFavorite}
+                    />
                 ))}
                 </div>
             ) : (

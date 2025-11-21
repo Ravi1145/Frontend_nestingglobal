@@ -1,78 +1,52 @@
 import React, { useState, useEffect } from "react";
 import { Property } from "../../types";
 import PropertyCard from "../PropertyCard";
-import { io } from "socket.io-client";
 import { HeartIcon } from "../icons";
 
 interface PropertyDetailPageProps {
-  propertyId: string;
+  property: Property | null;
+  properties: Property[];
   favorites: string[];
   onNavigateBack: () => void;
   onToggleFavorite: (propertyId: string) => void;
   onViewSimilar: (propertyId: string) => void;
 }
 
-const socket = io("http://localhost:5000");
-
 const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
-  propertyId,
+  property,
+  properties,
   favorites,
   onNavigateBack,
   onToggleFavorite,
   onViewSimilar,
 }) => {
-  const [property, setProperty] = useState<Property | null>(null);
   const [mainImage, setMainImage] = useState("");
-  const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
-
-  // Fetch property data
-  const fetchProperty = async () => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/properties/${propertyId}`);
-      const data = await res.json();
-      if (data.success) {
-        setProperty(data.property);
-        setMainImage(data.property.images[0] || "");
-        fetchSimilarProperties(data.property.id);
-      } else {
-        console.error("Property not found");
-      }
-    } catch (err) {
-      console.error("Error fetching property:", err);
-    }
-  };
-
-  // Fetch similar properties
-  const fetchSimilarProperties = async (id: string) => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/properties/${id}/similar`);
-      const data = await res.json();
-      if (data.success) {
-        setSimilarProperties(data.properties);
-      }
-    } catch (err) {
-      console.error("Error fetching similar properties:", err);
-    }
-  };
 
   useEffect(() => {
-    if (propertyId) fetchProperty();
+    if (property && property.images && property.images.length > 0) {
+      setMainImage(property.images[0]);
+    } else {
+      setMainImage("/placeholder.jpg");
+    }
+  }, [property]);
 
-    socket.on("propertyUpdated", (updatedProperty: any) => {
-      if (updatedProperty.id === propertyId) fetchProperty();
-    });
+  const similarProperties = useState(() => {
+    if (!property) return [];
+    return properties
+      .filter(p => p.id !== property.id && (p.type === property.type || p.location === property.location))
+      .slice(0, 6);
+  }, [properties, property]);
 
-    socket.on("propertyAdded", (newProperty: any) => {
-      if (newProperty.id === propertyId) fetchProperty();
-    });
-
-    return () => {
-      socket.off("propertyUpdated");
-      socket.off("propertyAdded");
-    };
-  }, [propertyId]);
-
-  if (!property) return <p>Loading...</p>;
+  if (!property) {
+    return (
+      <div className="container mx-auto p-6">
+        <button onClick={onNavigateBack} className="mb-4 text-blue-600">&larr; Back</button>
+        <div className="p-6 bg-off-white rounded-lg">
+          <p className="text-warm-gray">Property details are unavailable.</p>
+        </div>
+      </div>
+    );
+  }
 
   const isFavorite = favorites.includes(property.id);
 
@@ -91,7 +65,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
           className="w-full max-h-[500px] object-cover rounded-lg mb-2"
         />
         <div className="flex gap-2">
-          {property.images.map((img, index) => (
+          {property.images?.map((img, index) => (
             <img
               key={index}
               src={img}

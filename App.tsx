@@ -125,6 +125,7 @@ const App: React.FC = () => {
           return (
             <PropertyDetailPage
               property={selectedProperty}
+              properties={allProperties}
               onNavigateBack={() => navigateTo(Page.Properties)}
               favorites={favorites}
               onToggleFavorite={toggleFavorite}
