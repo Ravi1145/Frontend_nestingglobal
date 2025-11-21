@@ -65,7 +65,11 @@ const App: React.FC = () => {
       )
     );
   });
+  
+  useEffect(()=> {
+    window.scrollTo(0,0);
 
+  },[currentPage,selectedProperty]);
   
 
   const toggleFavorite = useCallback((propertyId: string) => {
@@ -103,7 +107,8 @@ const App: React.FC = () => {
         if (selectedProperty) {
           return (
             <PropertyDetailPage
-              property={selectedProperty}
+              property={selectedProperty} 
+              properties={allProperties}  
               onNavigateBack={() => navigateTo(Page.Properties)}
               favorites={favorites}
               onToggleFavorite={toggleFavorite}

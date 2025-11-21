@@ -6,10 +6,9 @@ const API_BASE_URL = 'https://backend-nestingglobal.onrender.com';
 const SOCKET_SERVER_URL = 'https://backend-nestingglobal.onrender.com';
 
 
-const useSocket = (eventName, handler,https://backend-nestingglobal.onrender.com
-) => {
+const useSocket = (eventName, handler, url = SOCKET_SERVER_URL) => {
     useEffect(() => {
-        const socket = io(SOCKET_SERVER_URL, { transports: ['websocket'] });
+        const socket = io(url, { transports: ['websocket'] });
         socket.on(eventName, handler);
 
         return () => {

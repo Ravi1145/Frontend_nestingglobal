@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Property, PropertyType } from '../../types';
 import PropertyCard from '../PropertyCard';

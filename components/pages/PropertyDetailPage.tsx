@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Property } from "../../types";
 import PropertyCard from "../PropertyCard";
 import { HeartIcon } from "../icons";
@@ -9,7 +9,7 @@ interface PropertyDetailPageProps {
   favorites: string[];
   onNavigateBack: () => void;
   onToggleFavorite: (propertyId: string) => void;
-  onViewSimilar: (propertyId: string) => void;
+  onViewSimilar: (property: Property) => void;
 }
 
 const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
@@ -23,24 +23,30 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
   const [mainImage, setMainImage] = useState("");
 
   useEffect(() => {
-    if (property && property.images && property.images.length > 0) {
+    if (property?.images?.length) {
       setMainImage(property.images[0]);
     } else {
       setMainImage("/placeholder.jpg");
     }
   }, [property]);
 
-  const similarProperties = useState(() => {
+  const similarProperties = useMemo(() => {
     if (!property) return [];
     return properties
-      .filter(p => p.id !== property.id && (p.type === property.type || p.location === property.location))
+      .filter(
+        (p) =>
+          p.id !== property.id &&
+          (p.type === property.type || p.location === property.location)
+      )
       .slice(0, 6);
   }, [properties, property]);
 
   if (!property) {
     return (
       <div className="container mx-auto p-6">
-        <button onClick={onNavigateBack} className="mb-4 text-blue-600">&larr; Back</button>
+        <button onClick={onNavigateBack} className="mb-4 text-blue-600">
+          &larr; Back
+        </button>
         <div className="p-6 bg-off-white rounded-lg">
           <p className="text-warm-gray">Property details are unavailable.</p>
         </div>
@@ -80,15 +86,20 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
       </div>
 
       <div className="flex items-center gap-4 mb-6">
-        <p className="text-xl font-semibold">AED {property.price.toLocaleString()}</p>
+        <p className="text-xl font-semibold">
+          AED {property.price.toLocaleString()}
+        </p>
         <button onClick={() => onToggleFavorite(property.id)}>
-          <HeartIcon className={`w-6 h-6 ${isFavorite ? "fill-red-500 text-red-500" : ""}`} />
+          <HeartIcon
+            className={`w-6 h-6 ${
+              isFavorite ? "fill-red-500 text-red-500" : ""
+            }`}
+          />
         </button>
       </div>
 
       <p className="mb-6">{property.description}</p>
 
-      {/* Property details */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div>Bedrooms: {property.bedrooms}</div>
         <div>Bathrooms: {property.bathrooms}</div>
@@ -96,7 +107,6 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
         <div>Type: {property.type}</div>
       </div>
 
-      {/* Similar properties */}
       {similarProperties.length > 0 && (
         <div>
           <h2 className="text-2xl font-semibold mb-4">Similar Properties</h2>
@@ -107,7 +117,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
                 property={prop}
                 isFavorite={favorites.includes(prop.id)}
                 onToggleFavorite={onToggleFavorite}
-                onViewDetails={() => onViewSimilar(prop.id)}
+                onViewDetails={() => onViewSimilar(prop)}
               />
             ))}
           </div>

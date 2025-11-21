@@ -6,7 +6,7 @@ const ContactPage: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setStatus('submitting');
+        setStatus('submitting'); 
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));
         // Simulate a successful response
